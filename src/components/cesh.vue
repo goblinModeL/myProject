@@ -1,7 +1,7 @@
 
 
 <template>
-  <router-view></router-view>
+<el-button> 测试</el-button>
 </template>
 <script setup lang="ts">
 
