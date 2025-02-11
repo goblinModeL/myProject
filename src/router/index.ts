@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
 
 import hello from '@/components/HelloWorld.vue'
+import antiShakeThrottling from '@/components/methods/antiShakeThrottling.vue'
 
 const routes = [
     { path: '/', component: hello,
@@ -13,6 +14,8 @@ const routes = [
             next()
         }
 },
+      { path: '/antiShakeThrottling', component: antiShakeThrottling,
+        meta: { title: "防抖节流" ,isAuth: true }},
 ]
 
 const router = createRouter({

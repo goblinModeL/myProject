@@ -47,14 +47,13 @@ export default {
     }
   },
   methods: {
-
     trueGo(){
       console.log('点击了')
     },
     goOther(){
 
-        this.debounces()
-      // this.$router.push({path:'/ces'})
+        // this.debounces()
+      this.$router.push({path:'/antiShakeThrottling'})
     },
      debounce(func, wait) {
   let timeout;
@@ -67,11 +66,8 @@ export default {
     handleScroll() {
       const list = this.$refs.list;
       const scrollTop = list.scrollTop;
+
       const startIndex = Math.floor(scrollTop / this.itemHeight); // 计算当前滚动位置对应的数据起始索引
-      // const endIndex = Math.min(
-      //     this.data.length - 1,
-      //     Math.ceil((scrollTop + list.clientHeight) / this.itemHeight) - 1
-      // ); // 计算当前显示的最后一项索引
 
       if (startIndex !== this.startIndex) {
         this.startIndex = startIndex;
@@ -79,7 +75,7 @@ export default {
       }
     },
     updateVisibleItems() {
-      JSON.parse(JSON.stringify(this.data));
+
       const endIndex = Math.min(
           this.data.length - 1,
           this.startIndex + this.visibleCount - 1
