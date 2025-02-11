@@ -1,10 +1,16 @@
 
 
 <template>
-<el-button> 测试</el-button>
+<el-button>测试</el-button>
 </template>
-<script setup lang="ts">
+<script >
+export default {
+  data(){
+    return{
 
+    }
+  }
+}
 </script>
 <style scoped>
 

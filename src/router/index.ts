@@ -1,14 +1,33 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
+import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
 
-import hello from '../components/HelloWorld.vue'
+import hello from '@/components/HelloWorld.vue'
 
 const routes = [
-    { path: '/', component: () =>hello, },
-    { path: '/ces', component: () => import('../components/cesh.vue'), },
+    { path: '/', component: hello,
+        meta: { title: "首页" ,isAuth: true }},
+    { path: '/ces', component: () => import('@/components/cesh.vue'),
+        meta: { title: "测试页面" ,isAuth: true },
+        beforeEnter:(_to:RouteLocationNormalized, _from:RouteLocationNormalized, next:NavigationGuardNext) => {
+            console.log('这是页面路由独享守卫')
+            next()
+        }
+},
 ]
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHistory(),
     routes,
+})
+//全局路由守卫
+router.beforeEach((_to, _from, next) => {
+     console.log('这是全局路由前置守卫')
+
+    next()
+})
+router.afterEach((to, from, next) => {
+    console.log('这是全局路由后置守卫')
+    console.log(to, from, next)
+
 })
 export default router
