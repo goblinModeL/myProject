@@ -12,13 +12,13 @@
         <el-text class="mx-1">无论用户触发多少次事件，对应的回调函数只会在事件停止触发指定事件后执行。</el-text>
         <el-text class="mx-1">就像下面这个数字，无论你点的多快，他都只会在时间到达后+1</el-text><br>
         <el-text class="mx-1" size="large">{{shack}}</el-text>
-        <div class="text item" ></div>
+
         <template #footer>
           <el-button @click="antiShake">防抖触发</el-button>
         </template>
       </el-card>
     </el-col>
-    <el-col :span="10"><div class="grid-content ep-bg-purple" />
+    <el-col :span="12"><div class="grid-content ep-bg-purple" />
       <el-card style="max-width: 480px;">
         <template #header>
           <div class="card-header">
@@ -26,9 +26,8 @@
           </div>
         </template>
         <el-text class="mx-1">无论用户触发事件多少次，附加的函数在给定的时间间隔内只会执行一次。</el-text>
-        <el-text class="mx-1">就像下面这个数字，无论你点的多快，他在这个时间间隔内只会+1</el-text><br>
+        <el-text class="mx-1">就像下面这个数字，无论你点的多快，他在这个时间间隔内只会+1。</el-text><br>
         <el-text class="mx-1" size="large">{{number}}</el-text>
-        <div class="text item" ></div>
         <template #footer>
           <el-button @click="Throttle">节流触发</el-button>
         </template>

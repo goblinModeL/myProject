@@ -9,9 +9,11 @@ declare module 'vue' {
   export interface GlobalComponents {
     AntiShakeThrottling: typeof import('./src/components/methods/antiShakeThrottling.vue')['default']
     Cesh: typeof import('./src/components/cesh.vue')['default']
+    DigMessage: typeof import('./src/components/methods/digMessage.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElText: typeof import('element-plus/es')['ElText']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
