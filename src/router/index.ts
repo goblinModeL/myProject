@@ -4,10 +4,9 @@ import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router';
 // import hello from '@/components/HelloWorld.vue'
 import index from '@/views/index.vue'
 import antiShakeThrottling from '@/components/methods/antiShakeThrottling.vue'
-
+import pinia from '@/components/methods/storeDemo.vue'
 const routes = [
-    { path: '/', component: index,
-        meta: { title: "首页" ,isAuth: true }},
+    { path: '/', component: index, meta: { title: "首页" ,isAuth: true }},
        { path: '/ces', component: () => import('@/components/cesh.vue'),
         meta: { title: "测试页面" ,isAuth: true },
         beforeEnter:(_to:RouteLocationNormalized, _from:RouteLocationNormalized, next:NavigationGuardNext) => {
@@ -16,6 +15,8 @@ const routes = [
         }
 },
       { path: '/antiShakeThrottling', component: antiShakeThrottling, meta: { title: "防抖节流" ,isAuth: true }},
+    { path: '/pinia', component: pinia, meta: { title: "pinia" ,isAuth: true }},
+    { path: '/pinias', component: () => import('@/components/chatRoom/index.vue'), meta: { title: "pinia" ,isAuth: true }},
 ]
 
 const router = createRouter({

@@ -9,15 +9,18 @@ declare module 'vue' {
   export interface GlobalComponents {
     AntiShakeThrottling: typeof import('./src/components/methods/antiShakeThrottling.vue')['default']
     Cesh: typeof import('./src/components/cesh.vue')['default']
+    ChatRoom: typeof import('./src/components/chatRoom/index.vue')['default']
     DigMessage: typeof import('./src/components/methods/digMessage.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElText: typeof import('element-plus/es')['ElText']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StoreDemo: typeof import('./src/components/methods/storeDemo.vue')['default']
   }
 }
