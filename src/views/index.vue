@@ -1,57 +1,48 @@
 
 
 <template>
-  <el-button @click="open">开启弹窗</el-button>
-  <div class="page">
-    <div class="box">
-      <el-text>模拟是否会卡顿</el-text>
-    <el-text>{{title}}</el-text>
-    <el-input v-model="number"></el-input>
-    <el-button @click="join">填入</el-button>
-    </div>
-    <div class="list">
-      <div  v-for="(item,index) in list" class="flexBox">
-       <div class="item"> {{item.weight}} </div>
-         <div class="item"> {{item.pieces}} </div>
-        <el-button @click="choose(item,index)">选择此项</el-button>
-           </div>
-    </div>
-  </div>
+<!--  <el-button @click="open">开启弹窗</el-button>-->
   <dig-message  ref="dialogVisibleref" v-model:user="ly" ></dig-message>
-
+  <el-form :model="user" label-width="auto" style="max-width: 600px">
+    <el-form-item label="用户名">
+      <el-input v-model="user.username"></el-input>
+    </el-form-item>
+    <el-form-item label="密码">
+      <el-input v-model="user.password"></el-input>
+    </el-form-item>
+  </el-form>
+  <el-button style="width: 240px" @click="submit">登录</el-button>
 </template>
 
 <script setup >
 
 import {ref,reactive ,onMounted} from 'vue'
  import DigMessage from "@/components/methods/digMessage.vue";
+import {login} from "@/utils/interface.js";
  const dialogVisibleref=ref(null)
 const number=ref(10)
-const title=ref(null)
-let  index=ref(0)
 const ly=reactive({
   name:'ly',
   age:'18'
 })
-const list=ref([])
 const open=()=>{
    dialogVisibleref.value.dialogVisible=true
  }
- const join=()=>{
-   list.value[parseInt(index.value)].weight=number.value
-
- };
- const choose=(item,index1)=>{
-    index.value=index1
-    title.value=item.pieces
-   console.log(title)
- };
+const user=reactive({
+  username:"",
+  password:"",
+})
+const submit=()=>{
+   login(
+       "/user/login",user
+   ).then(res=>{
+     console.log(res)
+   }).catch(err=>{
+     console.log(err)
+   })
+}
 onMounted(()=>{
-  list.value.push(...Array.from({length:150},(v,k)=>({
-    pieces: k+1+'',
-    bubbleType:'1',
-    weight:k,
-  })))
+
 })
 </script>
 <style scoped>

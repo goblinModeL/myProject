@@ -3,5 +3,9 @@
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+    "allowJs": true,  // 允许导入 JS 文件
+    "checkJs": false   // 关闭 JS 类型检查（可选）
+  },
 }

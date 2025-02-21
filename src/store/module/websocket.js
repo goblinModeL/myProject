@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useWebSocketStore = defineStore("websocket", {
     state: () => ({
         socket: null,
-        url: "ws://172.20.0.131:8080", // WebSocket 服务器地址
+        url: "ws://172.20.0.4:8080", // WebSocket 服务器地址
         isConnected: false, // 连接状态
         reconnectAttempts: 0, // 断线重连次数
         maxReconnectAttempts: 5, // 最大重连次数
@@ -17,9 +17,9 @@ export const useWebSocketStore = defineStore("websocket", {
  // },
     actions: {
         // ✅ 连接 WebSocket
-        connect() {
+        connect(formId,toId) {
             if (this.socket) return; // 避免重复连接
-            this.socket = new WebSocket(this.url);
+            this.socket = new WebSocket(this.url+'?formId='+formId+"&toId="+toId);
 
             this.socket.onopen = () => {
                 console.log("✅ WebSocket 连接成功:", this.url);
@@ -30,10 +30,30 @@ export const useWebSocketStore = defineStore("websocket", {
 
             this.socket.onmessage = async (event) => {
                 console.log("📩 收到消息:", event.data);
-                const text = await event.data.text()
+                console.log(typeof event.data)
+                console.log(typeof event.data==="string");
+                if (event.data instanceof Blob) {
+                    // 解析 Blob 数据
+                    const text = await event.data.text();
+                    const message = JSON.parse(text);
+                        this.messages.push(message);
+                    console.log("📩 客户端收到消息Bolb:", text);
+                } else {
+                    console.log("📩 客户端收到消息:", event.data);
+                }
+                // if(typeof event.data === "string") {
+                // }
+                // else{
+                //     const text = await event.data.text();
+                //     const message = JSON.parse(text);
+                //     this.messages.push(message);
+                // }
 
-                const message = JSON.parse(text);
-                this.messages.push(message);
+
+
+
+
+
                 this.subscribers.forEach(callback => callback(event.data));
 
             };
@@ -42,8 +62,8 @@ export const useWebSocketStore = defineStore("websocket", {
                 console.log("❌ WebSocket 连接关闭");
                 this.isConnected = false;
                 this.socket = null;
-                this.stopHeartbeat(); // 停止心跳
-                this.reconnect(); // 尝试重连
+                // this.stopHeartbeat(); // 停止心跳
+                // this.reconnect(); // 尝试重连
             };
 
             this.socket.onerror = (error) => {
@@ -65,7 +85,7 @@ export const useWebSocketStore = defineStore("websocket", {
         // ✅ 关闭 WebSocket
         close() {
             if (this.socket) {
-                this.socket.close();
+                    this.socket.close();
                 this.socket = null;
             }
         },
