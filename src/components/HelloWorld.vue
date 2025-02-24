@@ -10,6 +10,7 @@
 </template>
 
 <script>
+//虚拟列表
 export default {
   props: {
 

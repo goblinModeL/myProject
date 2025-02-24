@@ -5,16 +5,8 @@
     <el-row   :gutter="16">
       <el-col :span="6">
         <el-form :inline="true" :model="Form" class="demo-form-inline">
-          <el-form-item label=" 发送人">
-            <el-select v-model="Form.formUser"    style="width: 240px" @change="change">
-              <el-option label="李扬" value="ly" />
-              <el-option label="张" value="zjj" />
-              <el-option label="河" value="dy" />
-            </el-select>
-          </el-form-item>
           <el-form-item label="接收人">
             <el-select
-                :disabled="!Form.formUser"
                 v-model="Form.toUser"
                 placeholder="选择接收人"
                 size="large"
@@ -25,7 +17,7 @@
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
-                  :disabled="item.disabled"
+
               />
             </el-select>
           </el-form-item>
@@ -33,7 +25,7 @@
       </el-col>
       <el-col :span="12">
         <div class="box">
-        <p  v-for="(item,index) in wsStore.messages">{{item}}</p>
+        <p  v-for="(item,index) in wsStore.messages">{{item.name}}</p>
         </div>
       </el-col>
       <el-col :span="6">
@@ -52,26 +44,17 @@
  import  { onMounted,ref,onUnmounted,reactive} from "vue";
   import {useWebSocketStore} from "@/store/module/websocket.js";
  import {ElMessage} from "element-plus";
+ import {getAllUsers} from "@/utils/interface.js";
 const  wsStore =useWebSocketStore()
  // const isConnected = computed(() => wsStore.isConnected);
  // 表单数据
  const Form=reactive({
    toUser:"",
-   formUser:"",
  })
- const  userList=reactive([
-   {
-     label:"李扬",
-     value:"ly"
-   },
-   {
-     label:"张",
-     value:"zjj"
-   },
-   {
-     label:"河",
-     value:"dy"
-   },
+ const userName=ref(sessionStorage.getItem("userName"))
+ const userId=ref(sessionStorage.getItem("userId"))
+ const  userList=ref([
+
  ])
  const  change=(val)=>{
    Form.toUser="";
@@ -87,12 +70,12 @@ const  wsStore =useWebSocketStore()
  }
  const sss = ()=>{
 
-   wsStore.sendMessage( Form.formUser,text.value)
+   wsStore.sendMessage(userName.value,text.value)
  };
  const open = ()=>{
 
-   if(!wsStore.isConnected&&Form.toUser&&Form.formUser){
-     wsStore.connect(Form.formUser,Form.toUser)
+   if(!wsStore.isConnected&&Form.toUser){
+     wsStore.connect(userName.value,Form.toUser)
    }
    else{
      ElMessage.error("请先选择接收人和发送人")
@@ -103,7 +86,19 @@ const  wsStore =useWebSocketStore()
  };
  const text=ref("")
  onMounted(()=>{
+   getAllUsers("/user/getAllUsers",userId.value).then(res=>{
+     console.log(res.code)
+     if(res.code==200){
+       userList.value = res.data.map(user => ({
+         label: user.userName,  // 将 name 转为 label
+         value: user.id,    // 将 id 转为 value
+       }));
+       console.log(userList)
+     }
 
+   }).catch(error=>{
+     ElMessage.error(error)
+   })
  })
  onUnmounted(()=>{
    wsStore.close()

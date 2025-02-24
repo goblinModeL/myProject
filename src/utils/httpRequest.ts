@@ -6,10 +6,10 @@ const service = axios.create({
     timeout: 10000, // 超时时间 10s
     withCredentials: true, // 允许携带 cookie
 });
-
 // 请求拦截器
 service.interceptors.request.use(
     (config) => {
+        console.log(config)
         const token = localStorage.getItem("token"); // 从本地存储获取 token
         if (token) {
             config.headers["Authorization"] = `Bearer ${token}`; // 统一在请求头携带 token
@@ -32,6 +32,7 @@ service.interceptors.response.use(
     (error) => {
         if (error.response) {
             const { status, data } = error.response;
+            console.log(data)
             if (status === 401) {
                 console.error("未授权，重新登录");
                 // 这里可以触发登出逻辑，比如清除 token 并跳转登录页
@@ -40,10 +41,13 @@ service.interceptors.response.use(
             } else {
                 console.error(data.message || "请求出错");
             }
+            console.log(data.message)
+            return Promise.reject(data.message|| "请求出错");
         } else {
             console.error("网络错误或服务器未响应");
+            return Promise.reject("网络错误或服务器未响应");
         }
-        return Promise.reject(error);
+
     }
 );
 
