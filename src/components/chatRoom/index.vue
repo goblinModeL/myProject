@@ -4,13 +4,14 @@
  <div class="father">
     <el-row   :gutter="16">
       <el-col :span="6">
-        <el-form :inline="true" :model="Form" class="demo-form-inline">
-          <el-form-item label="接收人">
+        <el-form :inline="true" :model="Form" class="demo-form-inline" >
+          <el-form-item label="接收人" style="width: 90%">
             <el-select
+                @change="change"
                 v-model="Form.toUser"
                 placeholder="选择接收人"
-                size="large"
-                style="width: 240px"
+
+
             >
               <el-option
                   v-for="item in userList"
@@ -30,8 +31,6 @@
       </el-col>
       <el-col :span="6">
         <el-input v-model="text" placeholder="请输入消息。。。" style="max-width: 500px"></el-input>
-        <el-button @click="open">连接ws</el-button>
-        <el-button @click="close">关闭ws</el-button>
         <el-button @click="sss">send</el-button>
       </el-col>
     </el-row>
@@ -44,7 +43,7 @@
  import  { onMounted,ref,onUnmounted,reactive} from "vue";
   import {useWebSocketStore} from "@/store/module/websocket.js";
  import {ElMessage} from "element-plus";
- import {getAllUsers} from "@/utils/interface.js";
+ import {chatHistory, getAllUsers} from "@/utils/interface.js";
 const  wsStore =useWebSocketStore()
  // const isConnected = computed(() => wsStore.isConnected);
  // 表单数据
@@ -57,33 +56,27 @@ const  wsStore =useWebSocketStore()
 
  ])
  const  change=(val)=>{
-   Form.toUser="";
-   userList.forEach(item=>{
-     if(item.value===val){
-       item.disabled=true;
+ //  改变后清空聊天记录
+ //    重置ws 获取聊天记录
+   if(val){
+     if(wsStore.isConnected) {
+       wsStore.close();
      }
-     else{
-       item.disabled=false;
-     }
-   })
+     wsStore.messages=[]
+     wsStore.connect(userName.value, Form.toUser)
+     chatHistory()
+   }
+ }
+ // 获取聊天记录
+ const getChatRecord=()=>{
+   chatHistory('/user/chatHistory',{formId:userName.value, toId:Form.toUser})
 
  }
  const sss = ()=>{
 
    wsStore.sendMessage(userName.value,text.value)
  };
- const open = ()=>{
 
-   if(!wsStore.isConnected&&Form.toUser){
-     wsStore.connect(userName.value,Form.toUser)
-   }
-   else{
-     ElMessage.error("请先选择接收人和发送人")
-   }
- };
- const close = ()=>{
-  wsStore.close();
- };
  const text=ref("")
  onMounted(()=>{
    getAllUsers("/user/getAllUsers",userId.value).then(res=>{
