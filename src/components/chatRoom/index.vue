@@ -26,7 +26,7 @@
       </el-col>
       <el-col :span="12">
         <div class="box">
-        <p  v-for="(item,index) in wsStore.messages">{{item.name}}</p>
+        <p  v-for="(item,index) in historyList">{{item.content}}</p>
         </div>
       </el-col>
       <el-col :span="6">
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
- import  { onMounted,ref,onUnmounted,reactive} from "vue";
+ import  { onMounted,ref,onUnmounted,reactive,watch} from "vue";
   import {useWebSocketStore} from "@/store/module/websocket.js";
  import {ElMessage} from "element-plus";
  import {chatHistory, getAllUsers} from "@/utils/interface.js";
@@ -55,21 +55,42 @@ const  wsStore =useWebSocketStore()
  const  userList=ref([
 
  ])
+ const historyList=ref([])
+ watch(  wsStore.messages,(val)=>{
+   historyList.value.concat(val)
+
+ })
  const  change=(val)=>{
  //  改变后清空聊天记录
  //    重置ws 获取聊天记录
    if(val){
-     if(wsStore.isConnected) {
-       wsStore.close();
-     }
+
      wsStore.messages=[]
-     wsStore.connect(userName.value, Form.toUser)
-     chatHistory()
+     wsStore.setTargetUser(
+         Form.toUser,
+     )
+     getChatRecord()
    }
  }
+
+ onMounted(()=>{
+   if(wsStore.isConnected) {
+     wsStore.close();
+   }
+   else{
+     wsStore.connect(userId.value,"")
+   }
+ })
  // 获取聊天记录
  const getChatRecord=()=>{
-   chatHistory('/user/chatHistory',{formId:userName.value, toId:Form.toUser})
+   chatHistory('/user/chatHistory',{fromId:userId.value, toId:Form.toUser}).then(res=>{
+     historyList.value=res.data
+   }).catch(
+     (err)=>{
+
+     }
+
+   )
 
  }
  const sss = ()=>{

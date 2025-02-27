@@ -11,6 +11,7 @@ export const useWebSocketStore = defineStore("websocket", {
         heartbeatMsg: "ping", // 心跳消息
         subscribers: [], // 订阅者回调
         messages: [],
+        toUser:"",
     }),
  // getters: {
  //     isConnected: (state) => state.isConnected,
@@ -71,11 +72,14 @@ export const useWebSocketStore = defineStore("websocket", {
                 this.isConnected = false;
             };
         },
-
+        setTargetUser(toUser) {
+            this.toUser = toUser;  // 只更新接收人，不重新建立 WebSocket 连接
+            this.socket.send(JSON.stringify({ type: "setToUser", toUser: this.toUser }));
+        },
         // ✅ 发送消息
         sendMessage(username,content) {
             if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-                const message = { username, content, timestamp: new Date() };
+                const message = { username,content, timestamp: new Date() ,};
                 this.socket.send(JSON.stringify(message));
             } else {
                 console.warn("🚨 WebSocket 未连接，无法发送消息");

@@ -17,8 +17,16 @@ export  function  register(url,data){
 export  function  getAllUsers(url,userId){
     return http({
         url:url,
+        method: "get",
+        params:{userId:userId}
+    })
+}
+// 获取聊天记录
+export  function  chatHistory(url,data){
+    return http({
+        url:url,
         method: "post",
-        data:{userId:userId}
+        data:data,
     })
 }
 // export  function  login(url,data){
